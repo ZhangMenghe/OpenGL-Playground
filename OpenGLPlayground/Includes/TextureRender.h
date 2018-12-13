@@ -7,9 +7,9 @@ class TextureRender
 public:
 	TextureRender(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
 	virtual void onInitial();
-	void onInitial(const float* vertices, int verticeNum,
-				   const unsigned int* indices, int indiceNum, 
-				   const float* uvs);
+	void onInitial(float* vertices, int verticeNum,
+				   unsigned int* indices, int indiceNum, 
+				   float* uvs);
 	void onDraw();
 	void onDestroy();
 	void setTexture(const char* texture_file_name);

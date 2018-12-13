@@ -13,17 +13,14 @@ TextureRender::TextureRender(const char* vertexPath, const char* fragmentPath, c
 	shaderHelper = new GLShaderHelper(vertexPath, fragmentPath, geometryPath);
 }
 void TextureRender::onInitial() {}
-void TextureRender::onInitial(const float* vertices, int verticeNum,
-	const unsigned int* indices, int indiceNum,
-	const float* uvs) {
-	_vertice_num = verticeNum;
-	_indices_num = indiceNum;
-	_vertices = new float[verticeNum * 3];
-	_indices = new GLuint[indiceNum];
-	_uvs = new float[verticeNum * 2];
-	memcpy(_vertices, vertices, verticeNum * 3 * sizeof(float));
-	memcpy(_indices, indices, indiceNum  * sizeof(GLuint));
-	memcpy(_uvs, uvs, verticeNum * 2 * sizeof(float));
+void TextureRender::onInitial(float* vertices, int verticeNum,
+	unsigned int* indices, int indiceNum,
+	float* uvs) {
+	_vertice_num = verticeNum;	_indices_num = indiceNum;
+
+	_vertices = vertices;
+	_indices = indices;
+	_uvs = uvs;
 
 	_initialize_buffers_static();
 }
