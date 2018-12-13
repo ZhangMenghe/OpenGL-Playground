@@ -19,7 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\GLShaderHelper.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\SimpleQuad.cpp" />
+    <ClCompile Include="Source\TextureRender.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Includes\GLShaderHelper.h" />
+    <ClInclude Include="Includes\SimpleQuad.h" />
+    <ClInclude Include="Includes\TextureRender.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -73,7 +81,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\OpenGL-Develop-Env\SOIL\src;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,6 +93,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\Win32;D:\OpenGL-Develop-Env\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -92,7 +107,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\x64;D:\OpenGL-Develop-Env\freeglut\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OpenGL-Develop-Env\SOIL\lib;D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\x64;D:\OpenGL-Develop-Env\freeglut\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freeglut.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
