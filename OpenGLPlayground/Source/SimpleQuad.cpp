@@ -22,5 +22,5 @@ void SimpleQuad::onInitial() {
 		1, 2, 3  // second triangle
 	};
 	TextureRender::onInitial(vertices, 4, indices, 6, uvs);
-	setTexture("Resources/img.png");
+	create2DTexture("Resources/img.png");
 }

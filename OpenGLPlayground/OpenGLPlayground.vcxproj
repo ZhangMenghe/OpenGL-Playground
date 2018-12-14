@@ -23,11 +23,13 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\SimpleQuad.cpp" />
     <ClCompile Include="Source\TextureRender.cpp" />
+    <ClCompile Include="Source\WaterRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Includes\GLShaderHelper.h" />
     <ClInclude Include="Includes\SimpleQuad.h" />
     <ClInclude Include="Includes\TextureRender.h" />
+    <ClInclude Include="Includes\WaterRender.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
