@@ -41,5 +41,6 @@ void main(){
 	vec3 refract = refract(-V, newN, eta);//air to water
 	vec4 refraction = texture(uSamplerCube, refract);
 
-	FragColor = waterColor + reflecColor * fastFresnel + refraction * (1-fastFresnel);
+	//FragColor = waterColor + reflecColor * fastFresnel + refraction * (1-fastFresnel);
+	FragColor= vec4(.0, 0.2, 0.8, 1.0);
 }

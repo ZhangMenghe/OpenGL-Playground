@@ -1,6 +1,8 @@
 #include <GL/glew.h>
+#include <GL/freeglut.h>
 #include <string.h>
 #include <TextureRender.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -25,6 +27,7 @@ void TextureRender::onInitial(float* vertices, int verticeNum,
 	_initialize_buffers_static();
 }
 void TextureRender::_initialize_buffers_static() {
+	glEnable(GL_DEPTH_TEST);
 	_attrib_vertices = glGetAttribLocation(shaderHelper->getShaderId(), "aPosition");
 	_attrib_uvs = glGetAttribLocation(shaderHelper->getShaderId(), "aTexCoord");
 
@@ -58,9 +61,7 @@ void TextureRender::_initialize_buffers_static() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
-void TextureRender::createCubeTexture(const char* path_posx, const char* path_negx,
-									  const char* path_posy, const char* path_negy, 
-									  const char* path_posz, const char* path_negz) {
+void TextureRender::createCubeTexture(const char** cube_files) {
 	glActiveTexture(GL_TEXTURE1);
 	glGenTextures(1, &_skybox_id);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, _skybox_id);
@@ -72,36 +73,12 @@ void TextureRender::createCubeTexture(const char* path_posx, const char* path_ne
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
 											// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
 	int width, height, nrChannels;
-	
-	unsigned char *data = stbi_load(path_posx, &width, &height, &nrChannels, 0);
-	if (data)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
-
-	data = stbi_load(path_negx, &width, &height, &nrChannels, 0);
-	if (data)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
-
-	data = stbi_load(path_posy, &width, &height, &nrChannels, 0);
-	if (data)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
-
-	data = stbi_load(path_negy, &width, &height, &nrChannels, 0);
-	if (data)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
-
-	data = stbi_load(path_posz, &width, &height, &nrChannels, 0);
-	if (data)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
-
-	data = stbi_load(path_negz, &width, &height, &nrChannels, 0);
-	if (data)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	stbi_image_free(data);
+	for (int i = 0; i < 6; i++) {
+		unsigned char *data = stbi_load(cube_files[i], &width, &height, &nrChannels, 0);
+		if (data)
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		stbi_image_free(data);
+	}
 
 	shaderHelper->use();
 	shaderHelper->setInt("uSamplerCube", 1);
@@ -148,16 +125,19 @@ void TextureRender::onDraw() {
 }
 
 void TextureRender::onDraw3D() {
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	shaderHelper->use();
+	if (bViewChanged) {
+		_viewMat = glm::lookAt(_eyePos, _eyePos+FRONT, UP);// *_cameraRot;
+		bViewChanged = false;
+	}
 
 	shaderHelper->setMat4("uProjMat", _projMat);
 	shaderHelper->setMat4("uViewMat", _viewMat);
 	shaderHelper->setVec3("uEye", _eyePos);
-
-	/*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	*/
+	
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, _indices_num, GL_UNSIGNED_INT, 0);
 }
@@ -165,4 +145,18 @@ void TextureRender::onDestroy() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(2, VBO);
 	glDeleteBuffers(1, &EBO);
+}
+
+void TextureRender::RotateCamera(glm::vec2 delta_move) {
+	if (delta_move.x || delta_move.y) {
+		//view_rotate.x += 1000.0f * delta_move.x / (float)glutGet(GLUT_SCREEN_WIDTH);
+		//view_rotate.y += 1000.0f * delta_move.y / (float)glutGet(GLUT_SCREEN_HEIGHT);
+		_cameraRot = glm::rotate(glm::mat4(), -delta_move.y, glm::vec3(1.0f, .0f, .0f)) *
+			glm::rotate(glm::mat4(), -delta_move.x, glm::vec3(.0f, 1.0f, .0f));
+		bViewChanged = true;
+	}
+}
+void TextureRender::MoveCamera(glm::fvec3 move) {
+	_eyePos += move; 
+	bViewChanged = true; 
 }

@@ -2,7 +2,7 @@
 #include <string.h>
 #include <WaterRender.h>
 #include <GL/freeglut.h>
-#include <glm/gtc/matrix_transform.hpp>
+
 WaterRender::WaterRender(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
 	:TextureRender(vertexPath, fragmentPath, geometryPath){
 }
@@ -47,25 +47,13 @@ void WaterRender::onInitial() {
 	}
 	_initialize_buffers_static();
 	create2DTexture("Resources/waves.png");
-	createCubeTexture("Resources/skybox/cloudyhills_posx.png", "Resources/skybox/cloudyhills_negx.png",
+	const char* filenames[6] = { "Resources/skybox/cloudyhills_posx.png", "Resources/skybox/cloudyhills_negx.png",
 		"Resources/skybox/cloudyhills_posy.png", "Resources/skybox/cloudyhills_negy.png",
-		"Resources/skybox/cloudyhills_posz.png", "Resources/skybox/cloudyhills_negz.png");
+		"Resources/skybox/cloudyhills_posz.png", "Resources/skybox/cloudyhills_negz.png" };
+	createCubeTexture(filenames);
 }
-void WaterRender::RotateView(glm::vec2 delta_move) {
-	if (delta_move.x || delta_move.y) {
-		view_rotate.x += 1000.0f * delta_move.x / (float)glutGet(GLUT_SCREEN_WIDTH);
-		view_rotate.y += 1000.0f * delta_move.y / (float)glutGet(GLUT_SCREEN_HEIGHT);
-		_cameraRot = glm::rotate(glm::mat4(),-view_rotate.y, glm::vec3(1.0f, .0f, .0f)) *
-			glm::rotate(glm::mat4(), -view_rotate.x, glm::vec3(.0f, 1.0f, .0f));
-		bEyeChange = true;
-	}
-}
-void WaterRender::onDraw3D() {
-	if (bEyeChange) {
-		_viewMat = glm::lookAt(_eyePos, CENTER, UP) * _cameraRot;
-		bEyeChange = false;
-	}
-		
+
+void WaterRender::onDraw3D() {	
 	TextureRender::onDraw3D();
 	shaderHelper->use();
 	shaderHelper->setFloat("uTime", glutGet(GLUT_ELAPSED_TIME) / 1000.0f);

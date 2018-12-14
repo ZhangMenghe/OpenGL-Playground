@@ -50,5 +50,5 @@ void main(){
 	bumpCoord1.xy = aTexCoord.xy * texScale *2 + bumpTime * bumpSpeed*4;
 	bumpCoord2.xy = aTexCoord.xy * texScale *4 + bumpTime * bumpSpeed*8;
 
-	gl_Position = uProjMat *uViewMat* P;
+	gl_Position = uProjMat *uViewMat* vec4(aPosition, 1.0); //P;
 }

@@ -1,9 +1,8 @@
 #ifndef TEXTURE_RENDER_H
 #define TEXTURE_RENDER_H
 #include <GLShaderHelper.h>
-
-class TextureRender
-{
+#include <vector>
+class TextureRender{
 public:
 	TextureRender(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
 	virtual void onInitial();
@@ -14,32 +13,38 @@ public:
 	void onDraw3D();
 	void onDestroy();
 	void create2DTexture(const char* texture_file_name);
-	void createCubeTexture(const char* path_posx, const char* path_negx,
-						   const char* path_posy, const char* path_negy,
-						   const char* path_posz, const char* path_negz);
+	
 	void setProjectionMatrix(glm::mat4 proj) { _projMat = proj;}
+
+	void MoveCamera(glm::fvec3 move);
+	void RotateCamera(glm::vec2 delta_move);
+
 protected:
 	float * _vertices;
-	GLuint * _indices;
+	unsigned int * _indices;
 	float * _uvs;
 
-	GLuint VAO, VBO[2], EBO;
-	GLuint _texture_id, _skybox_id;
+	unsigned int VAO, VBO[2], EBO;
+	unsigned int _texture_id, _skybox_id;
 	GLShaderHelper *shaderHelper;
 
-	GLuint _attrib_vertices;
-	GLuint _attrib_uvs;
+	unsigned int _attrib_vertices;
+	unsigned int _attrib_uvs;
 
 	int _vertice_num;
 	int _indices_num;
 
+	bool bViewChanged = true;
 	const glm::vec3 UP = glm::vec3(.0f, 1.0f, .0f);
-	const glm::vec3 CENTER = glm::vec3(.0f);
-	glm::vec3 _eyePos = glm::vec3(.0f, 100.0f, 140.0f);
+	const glm::vec3 FRONT = glm::vec3(.0, .0, -1.0f);
+	glm::vec3 _eyePos = glm::vec3(.0f, 50.0, 100.0f);
 	glm::mat4 _viewMat = glm::mat4();
 	glm::mat4 _projMat = glm::mat4();
+	glm::vec3 view_rotate = glm::vec3(.0f);
+	glm::mat4 _cameraRot = glm::mat4(1.0f);
 
 	void _initialize_buffers_static();
+	void createCubeTexture(const char** cube_files);
 };
 
 #endif
