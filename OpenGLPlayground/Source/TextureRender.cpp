@@ -130,7 +130,7 @@ void TextureRender::onDraw3D() {
 
 	shaderHelper->use();
 	if (bViewChanged) {
-		_viewMat = glm::lookAt(_eyePos, _eyePos+FRONT, UP);// *_cameraRot;
+		_viewMat = glm::lookAt(_eyePos, _eyePos+ _camera_front, UP);// *_cameraRot;
 		bViewChanged = false;
 	}
 
@@ -147,14 +147,9 @@ void TextureRender::onDestroy() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void TextureRender::RotateCamera(glm::vec2 delta_move) {
-	if (delta_move.x || delta_move.y) {
-		//view_rotate.x += 1000.0f * delta_move.x / (float)glutGet(GLUT_SCREEN_WIDTH);
-		//view_rotate.y += 1000.0f * delta_move.y / (float)glutGet(GLUT_SCREEN_HEIGHT);
-		_cameraRot = glm::rotate(glm::mat4(), -delta_move.y, glm::vec3(1.0f, .0f, .0f)) *
-			glm::rotate(glm::mat4(), -delta_move.x, glm::vec3(.0f, 1.0f, .0f));
-		bViewChanged = true;
-	}
+void TextureRender::RotateCamera(glm::fvec3 front_dir) {
+	_camera_front = front_dir;
+	bViewChanged = true;
 }
 void TextureRender::MoveCamera(glm::fvec3 move) {
 	_eyePos += move; 

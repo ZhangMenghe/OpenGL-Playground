@@ -83,7 +83,7 @@ void SimpleCube::onDraw3D() {
 
 
 	if (bViewChanged) {
-		_viewMat = glm::lookAt(_eyePos, _eyePos + FRONT, UP);// *_cameraRot;
+		_viewMat = glm::lookAt(_eyePos, _eyePos + _camera_front, UP);// *_cameraRot;
 		bViewChanged = false;
 	}
 

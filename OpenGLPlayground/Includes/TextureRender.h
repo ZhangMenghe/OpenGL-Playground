@@ -17,7 +17,7 @@ public:
 	void setProjectionMatrix(glm::mat4 proj) { _projMat = proj;}
 
 	void MoveCamera(glm::fvec3 move);
-	void RotateCamera(glm::vec2 delta_move);
+	void RotateCamera(glm::fvec3 front_dir);
 
 protected:
 	float * _vertices;
@@ -36,7 +36,7 @@ protected:
 
 	bool bViewChanged = true;
 	const glm::vec3 UP = glm::vec3(.0f, 1.0f, .0f);
-	const glm::vec3 FRONT = glm::vec3(.0, .0, -1.0f);
+	glm::fvec3 _camera_front = glm::fvec3(.0, .0, -1.0f);
 	glm::vec3 _eyePos = glm::vec3(.0f, 50.0, 100.0f);
 	glm::mat4 _viewMat = glm::mat4();
 	glm::mat4 _projMat = glm::mat4();

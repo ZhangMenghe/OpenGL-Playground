@@ -1,16 +1,18 @@
 #pragma once
 #include <WaterRender.h>
 #include <GL/freeglut.h>
-
+#include<iostream>
 extern WaterRender * renderer;
 //extern SimpleCube * renderer;
 extern float deltaTime;
 const static float MOVE_SPEED = .2f;
-const static float ROTATE_SENSITIVE = 1.0f;
-const static glm::fvec3 FRONT = glm::fvec3(.0, .0, -1.0);
+const static float ROTATE_SENSITIVE = 0.1f;
+
 const static glm::fvec3 UP = glm::fvec3(.0, 1.0, .0);
 
 glm::fvec2 Mouse_old = glm::fvec2(.0), Mouse_current = glm::fvec2(.0);
+float yaw= -90.0f, pitch=.0f;
+glm::fvec3 FRONT = glm::fvec3(.0, .0, -1.0);
 
 void SpecialKey(int key, int x, int y) {
 	glm::fvec3 m_translate;
@@ -59,8 +61,16 @@ void MouseControl(int button, int state, int x, int y) {
 	//glutPostRedisplay();
 }
 void MouseMotion(int x, int y) {
-	glm::fvec2 delta = glm::fvec2(x-Mouse_old.x, y-Mouse_old.y) * ROTATE_SENSITIVE;
+	glm::fvec2 delta = glm::fvec2(x-Mouse_old.x, Mouse_old.y-y) * ROTATE_SENSITIVE;
 	Mouse_old = glm::fvec2(x, y);
-	renderer->RotateCamera(delta);
+	yaw += delta.x; pitch += delta.y;
+	pitch = (pitch > 89.0f) ? 89.0f : pitch;
+	pitch = (pitch < -89.0f) ? -89.0f : pitch;
+	
+	FRONT.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	FRONT.y = sin(glm::radians(pitch));
+	FRONT.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	FRONT = glm::normalize(FRONT);
+	renderer->RotateCamera(FRONT);
 	//glutPostRedisplay();
 }
