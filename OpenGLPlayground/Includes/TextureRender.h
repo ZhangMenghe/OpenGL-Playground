@@ -38,6 +38,7 @@ protected:
 	const glm::vec3 UP = glm::vec3(.0f, 1.0f, .0f);
 	glm::fvec3 _camera_front = glm::fvec3(.0, .0, -1.0f);
 	glm::vec3 _eyePos = glm::vec3(.0f, 50.0, 100.0f);
+	glm::mat4 _modelMat = glm::mat4();
 	glm::mat4 _viewMat = glm::mat4();
 	glm::mat4 _projMat = glm::mat4();
 	glm::vec3 view_rotate = glm::vec3(.0f);
