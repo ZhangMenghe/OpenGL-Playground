@@ -7,24 +7,22 @@ extern void SpecialKey(int key, int x, int y);
 extern void KeyBoard(unsigned char key, int x, int y);
 extern void MouseControl(int button, int state, int x, int y);
 extern void MouseMotion(int x, int y);
+extern void MouseWheel(int, int, int, int);
 
 WaterRender * renderer;
-float deltaTime = .0f, lastFrame=.0f;
+float deltaTime = .0f, lastFrame = .0f;
+extern float FOV;
+extern const float NEAR_PLANE, FAR_PLANE;
 
 void onViewChange(int width, int height) {
-	float aspect = ((float)width) / height;
-
-	// Calculate the projection matrix    
-	float fovy = 45.0f;
-	float near_plane = 0.01f;
-	float far_plane = 1000.0f;
-
-	renderer->setProjectionMatrix(glm::perspective(fovy, aspect, near_plane, far_plane));
+	renderer->setProjectionMatrix(glm::perspective(FOV, ((float)width) / height,
+												   NEAR_PLANE, FAR_PLANE));
 	// Set the viewport to be the entire window
 	glViewport(0, 0, width, height);
 }
 void onDrawFrame() {
 	deltaTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f - lastFrame;
+	
 
 	renderer->onDraw3D();
 	//glutPostRedisplay();
@@ -52,6 +50,7 @@ int main(int argc, char** argv) {
 	glutKeyboardFunc(KeyBoard);
 	glutMouseFunc(MouseControl);
 	glutMotionFunc(MouseMotion);
+	glutMouseWheelFunc(MouseWheel);
 
 	onInitial();
 

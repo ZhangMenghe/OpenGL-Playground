@@ -1,18 +1,24 @@
 #pragma once
 #include <WaterRender.h>
 #include <GL/freeglut.h>
-#include<iostream>
+#include <glm/gtc/matrix_transform.hpp>
 extern WaterRender * renderer;
-//extern SimpleCube * renderer;
-extern float deltaTime;
-const static float MOVE_SPEED = .2f;
-const static float ROTATE_SENSITIVE = 0.1f;
-
-const static glm::fvec3 UP = glm::fvec3(.0, 1.0, .0);
 
 glm::fvec2 Mouse_old = glm::fvec2(.0), Mouse_current = glm::fvec2(.0);
-float yaw= -90.0f, pitch=.0f;
+float yaw = -90.0f, pitch = .0f;
+const float MOVE_SPEED = .2f;
+const float ROTATE_SENSITIVE = 0.1f;
+const float ZOOM_SENSITIVE = 0.1f;
+
+// Calculate the projection matrix    
+float FOV = 45.0f;
+extern const float NEAR_PLANE = 0.01f;
+extern const float FAR_PLANE = 1000.0f;
+
+const glm::fvec3 UP = glm::fvec3(.0, 1.0f, .0);
 glm::fvec3 FRONT = glm::fvec3(.0, .0, -1.0);
+
+extern float deltaTime;
 
 void SpecialKey(int key, int x, int y) {
 	glm::fvec3 m_translate;
@@ -73,4 +79,18 @@ void MouseMotion(int x, int y) {
 	FRONT = glm::normalize(FRONT);
 	renderer->RotateCamera(FRONT);
 	//glutPostRedisplay();
+}
+void MouseWheel(int button, int dir, int xoffset , int yoffset) {
+	if (dir > 0) {
+		//zoom in
+		FOV = (FOV > 1.0F) ? FOV -= ZOOM_SENSITIVE : FOV;
+		renderer->setProjectionMatrix(glm::perspective(FOV, (float)glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT),
+			NEAR_PLANE, FAR_PLANE));
+	}
+	else {
+		//zoom out
+		FOV = (FOV < 45.0f) ? FOV += ZOOM_SENSITIVE : FOV;
+		renderer->setProjectionMatrix(glm::perspective(FOV, (float)glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT),
+			NEAR_PLANE, FAR_PLANE));
+	}
 }
