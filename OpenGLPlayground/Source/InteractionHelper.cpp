@@ -1,12 +1,13 @@
 #pragma once
-#include <WaterRender.h>
+#include <PhongCube.h>
 #include <GL/freeglut.h>
 #include <glm/gtc/matrix_transform.hpp>
-extern WaterRender * renderer;
+//extern SimpleCube * renderer;
+extern PhongCube * renderer;
 
 glm::fvec2 Mouse_old = glm::fvec2(.0), Mouse_current = glm::fvec2(.0);
 float yaw = -90.0f, pitch = .0f;
-const float MOVE_SPEED = .2f;
+const float MOVE_SPEED = .05f;
 const float ROTATE_SENSITIVE = 0.1f;
 const float ZOOM_SENSITIVE = 0.1f;
 

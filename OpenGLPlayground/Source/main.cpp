@@ -1,6 +1,6 @@
 #include <GL/freeglut.h>
 #include <iostream>
-#include <WaterRender.h>
+#include <PhongCube.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 extern void SpecialKey(int key, int x, int y);
@@ -9,7 +9,7 @@ extern void MouseControl(int button, int state, int x, int y);
 extern void MouseMotion(int x, int y);
 extern void MouseWheel(int, int, int, int);
 
-WaterRender * renderer;
+PhongCube * renderer;
 float deltaTime = .0f, lastFrame = .0f;
 extern float FOV;
 extern const float NEAR_PLANE, FAR_PLANE;
@@ -41,7 +41,9 @@ int main(int argc, char** argv) {
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(512, 512);
 	glutCreateWindow("WINDOW NAME");
-	renderer = new WaterRender("Shaders/water.vert", "Shaders/water.frag");
+	//renderer = new WaterRender("Shaders/water.vert", "Shaders/water.frag");
+	renderer = new PhongCube("Shaders/phong.vert",
+							  "Shaders/phong.frag");
 	glutReshapeFunc(onViewChange);
 
 	glutDisplayFunc(onDrawFrame);
