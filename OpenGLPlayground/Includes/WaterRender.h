@@ -10,7 +10,7 @@ public:
 	void onDraw3D();
 	
 private:
-
+	GLuint _texture_id;
 	static const int QUAD_GRID_SIZE = 40;
 };
 

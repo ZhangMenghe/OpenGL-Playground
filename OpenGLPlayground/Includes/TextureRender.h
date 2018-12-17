@@ -12,7 +12,6 @@ public:
 	void onDraw();
 	void onDraw3D();
 	void onDestroy();
-	void create2DTexture(const char* texture_file_name);
 	
 	void setProjectionMatrix(glm::mat4 proj) { _projMat = proj;}
 
@@ -25,7 +24,6 @@ protected:
 	float * _uvs;
 
 	unsigned int VAO, VBO[2], EBO;
-	unsigned int _texture_id, _skybox_id;
 	GLShaderHelper *shaderHelper;
 
 	unsigned int _attrib_vertices;
@@ -45,7 +43,8 @@ protected:
 	glm::mat4 _cameraRot = glm::mat4(1.0f);
 
 	void _initialize_buffers_static();
-	void createCubeTexture(const char** cube_files);
+	unsigned int create2DTexture(const char* texture_file_name);
+	unsigned int createCubeTexture(const char** cube_files);
 };
 
 #endif

@@ -61,10 +61,10 @@ void TextureRender::_initialize_buffers_static() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
-void TextureRender::createCubeTexture(const char** cube_files) {
-	glActiveTexture(GL_TEXTURE1);
-	glGenTextures(1, &_skybox_id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, _skybox_id);
+unsigned int TextureRender::createCubeTexture(const char** cube_files) {
+	GLuint skyboxID;
+	glGenTextures(1, &skyboxID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxID);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -79,44 +79,45 @@ void TextureRender::createCubeTexture(const char** cube_files) {
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
 	}
-
-	shaderHelper->use();
-	shaderHelper->setInt("uSamplerCube", 1);
+	return skyboxID;
 }
-void TextureRender::create2DTexture(const char* texture_file_name) {
-	glActiveTexture(GL_TEXTURE0);
-	glGenTextures(1, &_texture_id);
-	glBindTexture(GL_TEXTURE_2D, _texture_id);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+unsigned int TextureRender::create2DTexture(const char* texture_file_name) {
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
 											// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
 	unsigned char *data = stbi_load(texture_file_name, &width, &height, &nrChannels, 0);
 	if (data){
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLenum format;
+		if (nrChannels == 1)
+			format = GL_RED;
+		else if (nrChannels == 3)
+			format = GL_RGB;
+		else if (nrChannels == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, 
+					 width, height, 0, format,
+				     GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// set texture filtering parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
-
 	stbi_image_free(data);
-
-	shaderHelper->use();
-	shaderHelper->setInt("uSampler", 0);
+	return textureID;
 }
 
 void TextureRender::onDraw() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	// bind textures on corresponding texture units
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, _texture_id);
 
 	// render container
 	shaderHelper->use();

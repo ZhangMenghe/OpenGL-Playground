@@ -7,6 +7,8 @@ class SimpleQuad : public TextureRender
 public:
 	SimpleQuad(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
 	void onInitial();
+protected:
+	GLuint _texture_id;
 };
 
 #endif

@@ -70,24 +70,36 @@ void SimpleCube::onInitial() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	create2DTexture("Resources/img.png");
+	postInitial();
+}
+void SimpleCube::postInitial() {
+	_texture_id = create2DTexture("Resources/img.png");
+	shaderHelper->use();
+	shaderHelper->setInt("uSampler", 0);
 }
 
 void SimpleCube::onDraw3D() {
-	shaderHelper->use();
-	
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	preDraw3D_CUBE();
+	onDraw3D_CUBE();
+	postDraw3D_CUBE();
+}
+void SimpleCube::preDraw3D_CUBE() {
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	shaderHelper->use();
+}
+void SimpleCube::onDraw3D_CUBE() {
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _texture_id);
 
 	if (bViewChanged) {
 		_viewMat = glm::lookAt(_eyePos, _eyePos + _camera_front, UP);// *_cameraRot;
 		bViewChanged = false;
 	}
-
 	shaderHelper->setMat4("uProjMat", _projMat);
 	shaderHelper->setMat4("uViewMat", _viewMat);
-
+}
+void SimpleCube::postDraw3D_CUBE() {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }

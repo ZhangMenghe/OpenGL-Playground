@@ -22,7 +22,6 @@ void onViewChange(int width, int height) {
 }
 void onDrawFrame() {
 	deltaTime = glutGet(GLUT_ELAPSED_TIME) / 1000.0f - lastFrame;
-	
 
 	renderer->onDraw3D();
 	//glutPostRedisplay();
@@ -42,8 +41,8 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(512, 512);
 	glutCreateWindow("WINDOW NAME");
 	//renderer = new WaterRender("Shaders/water.vert", "Shaders/water.frag");
-	renderer = new PhongCube("Shaders/phong.vert",
-							  "Shaders/phong.frag");
+	renderer = new PhongCube("Shaders/compLight.vert",
+							  "Shaders/compLight.frag");
 	glutReshapeFunc(onViewChange);
 
 	glutDisplayFunc(onDrawFrame);

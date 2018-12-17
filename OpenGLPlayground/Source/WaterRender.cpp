@@ -46,15 +46,23 @@ void WaterRender::onInitial() {
 		}
 	}
 	_initialize_buffers_static();
-	create2DTexture("Resources/waves.png");
+	_texture_id = create2DTexture("Resources/waves.png");
+	
+	shaderHelper->use();
+	shaderHelper->setInt("uSampler", 0);
+
 	const char* filenames[6] = { "Resources/skybox/cloudyhills_posx.png", "Resources/skybox/cloudyhills_negx.png",
 		"Resources/skybox/cloudyhills_posy.png", "Resources/skybox/cloudyhills_negy.png",
 		"Resources/skybox/cloudyhills_posz.png", "Resources/skybox/cloudyhills_negz.png" };
 	createCubeTexture(filenames);
+	shaderHelper->use();
+	shaderHelper->setInt("uSamplerCube", 1);
 }
 
 void WaterRender::onDraw3D() {	
 	TextureRender::onDraw3D();
 	shaderHelper->use();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _texture_id);
 	shaderHelper->setFloat("uTime", glutGet(GLUT_ELAPSED_TIME) / 1000.0f);
 }
