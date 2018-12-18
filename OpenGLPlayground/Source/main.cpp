@@ -1,30 +1,25 @@
 #include <GL/freeglut.h>
 #include <iostream>
 #include <PhongCube.h>
+#include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-extern void SpecialKey(int key, int x, int y);
+/*extern void SpecialKey(int key, int x, int y);
 extern void KeyBoard(unsigned char key, int x, int y);
 extern void MouseControl(int button, int state, int x, int y);
 extern void MouseMotion(int x, int y);
-extern void MouseWheel(int, int, int, int);
+extern void MouseWheel(int, int, int, int);*/
 
 PhongCube * renderer;
-SimpleCube* lamp;
+//SimpleCube* lamp;
 
 glm::fvec3 lightPos = glm::fvec3(1.2, 1.0, 2.0);
 glm::mat4 lampModel = glm::scale(glm::mat4(1.0f), glm::fvec3(0.3f));
 float deltaTime = .0f, lastFrame = .0f;
-extern float FOV;
-extern const float NEAR_PLANE, FAR_PLANE;
+
 
 void onViewChange(int width, int height) {
-	renderer->setProjectionMatrix(glm::perspective(FOV, ((float)width) / height,
-												   NEAR_PLANE, FAR_PLANE));
-	lamp->setProjectionMatrix(glm::perspective(FOV, ((float)width) / height,
-		NEAR_PLANE, FAR_PLANE));
-
-	// Set the viewport to be the entire window
+	Camera::instance()->setProjectionMatrix(width, height);
 	glViewport(0, 0, width, height);
 }
 void onDrawFrame() {
@@ -33,24 +28,24 @@ void onDrawFrame() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	renderer->onDraw3D();
-	lamp->onDraw3D();
+	//lamp->onDraw3D();
 	//glutPostRedisplay();
 	glutSwapBuffers();
 }
 void updateLight() {
 	lampModel = glm::translate(lampModel, lightPos);
-	lamp->setModelMatrix(lampModel);
+	//lamp->setModelMatrix(lampModel);
 
 	renderer->setLightPos(lightPos);
 }
 void onInitial() {
 	renderer->onInitial();
-	lamp->onInitial();
+	//lamp->onInitial();
 	updateLight();
 }
 void onDestroy() {
 	renderer->onDestroy();
-	lamp->onDestroy();
+	//lamp->onDestroy();
 }
 
 int main(int argc, char** argv) {
@@ -62,17 +57,17 @@ int main(int argc, char** argv) {
 	//renderer = new WaterRender("Shaders/water.vert", "Shaders/water.frag");
 	renderer = new PhongCube("Shaders/compLight.vert",
 							  "Shaders/compLight.frag");
-	lamp = new SimpleCube("Shaders/cube.vert", "Shaders/cube.frag");
-
+	//lamp = new SimpleCube("Shaders/cube.vert", "Shaders/cube.frag");
+	
 	glutReshapeFunc(onViewChange);
 
 	glutDisplayFunc(onDrawFrame);
 	glutIdleFunc(onDrawFrame);
-	glutSpecialFunc(SpecialKey);
+	/*glutSpecialFunc(SpecialKey);
 	glutKeyboardFunc(KeyBoard);
 	glutMouseFunc(MouseControl);
 	glutMotionFunc(MouseMotion);
-	glutMouseWheelFunc(MouseWheel);
+	glutMouseWheelFunc(MouseWheel);*/
 
 	onInitial();
 

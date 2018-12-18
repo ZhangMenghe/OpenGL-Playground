@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <string.h>
 #include <SimpleCube.h>
+#include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 SimpleCube::SimpleCube(const char* vertexPath, const char* fragmentPath, 
 					   const char* geometryPath)
@@ -92,8 +93,8 @@ void SimpleCube::onDraw3D_CUBE() {
 		bViewChanged = false;
 	}
 	shaderHelper->setMat4("uModelMat", _modelMat);
-	shaderHelper->setMat4("uProjMat", _projMat);
-	shaderHelper->setMat4("uViewMat", _viewMat);
+	shaderHelper->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
+	shaderHelper->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
 }
 void SimpleCube::postDraw3D_CUBE() {
 	glBindVertexArray(VAO);

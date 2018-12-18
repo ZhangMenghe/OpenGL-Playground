@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <string.h>
 #include <PhongCube.h>
+#include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 PhongCube::PhongCube(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
@@ -36,7 +37,7 @@ void PhongCube::postInitial() {
 void PhongCube::onDraw3D_CUBE() {
 	SimpleCube::onDraw3D_CUBE();
 
-	shaderHelper->setVec3("uEyePos", _eyePos);
+	shaderHelper->setVec3("uEyePos", Camera::instance()->GetCameraPosition());
 	shaderHelper->setVec3("uLight.position", _lightPos);
 
 	glActiveTexture(GL_TEXTURE0);
