@@ -13,6 +13,7 @@ TextureRender::TextureRender(const char* vertexPath, const char* fragmentPath, c
 		printf("GL version 3 supported \n");
 	}
 	shaderHelper = new GLShaderHelper(vertexPath, fragmentPath, geometryPath);
+	_modelMat = _viewMat = _projMat = glm::mat4(1.0f);
 }
 void TextureRender::onInitial(){}
 void TextureRender::onInitial(float* vertices, int verticeNum,

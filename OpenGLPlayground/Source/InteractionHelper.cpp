@@ -2,8 +2,9 @@
 #include <PhongCube.h>
 #include <GL/freeglut.h>
 #include <glm/gtc/matrix_transform.hpp>
-//extern SimpleCube * renderer;
+
 extern PhongCube * renderer;
+extern SimpleCube * lamp;
 
 glm::fvec2 Mouse_old = glm::fvec2(.0), Mouse_current = glm::fvec2(.0);
 float yaw = -90.0f, pitch = .0f;
@@ -47,9 +48,9 @@ void SpecialKey(int key, int x, int y) {
 	}
 	if (bMove) {
 		renderer->MoveCamera(m_translate);
+		lamp->MoveCamera(m_translate);
 		//glutPostRedisplay();
 	}
-	
 }
 
 void KeyBoard(unsigned char key, int x, int y) {
@@ -79,6 +80,7 @@ void MouseMotion(int x, int y) {
 	FRONT.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	FRONT = glm::normalize(FRONT);
 	renderer->RotateCamera(FRONT);
+	lamp->RotateCamera(FRONT);
 	//glutPostRedisplay();
 }
 void MouseWheel(int button, int dir, int xoffset , int yoffset) {
@@ -87,11 +89,15 @@ void MouseWheel(int button, int dir, int xoffset , int yoffset) {
 		FOV = (FOV > 1.0F) ? FOV -= ZOOM_SENSITIVE : FOV;
 		renderer->setProjectionMatrix(glm::perspective(FOV, (float)glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT),
 			NEAR_PLANE, FAR_PLANE));
+		lamp->setProjectionMatrix(glm::perspective(FOV, (float)glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT),
+			NEAR_PLANE, FAR_PLANE));
 	}
 	else {
 		//zoom out
 		FOV = (FOV < 45.0f) ? FOV += ZOOM_SENSITIVE : FOV;
 		renderer->setProjectionMatrix(glm::perspective(FOV, (float)glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT),
+			NEAR_PLANE, FAR_PLANE));
+		lamp->setProjectionMatrix(glm::perspective(FOV, (float)glutGet(GLUT_WINDOW_WIDTH) / glutGet(GLUT_WINDOW_HEIGHT),
 			NEAR_PLANE, FAR_PLANE));
 	}
 }

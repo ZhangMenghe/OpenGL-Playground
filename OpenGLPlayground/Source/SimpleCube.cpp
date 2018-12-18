@@ -2,7 +2,8 @@
 #include <string.h>
 #include <SimpleCube.h>
 #include <glm/gtc/matrix_transform.hpp>
-SimpleCube::SimpleCube(const char* vertexPath, const char* fragmentPath, const char* geometryPath)
+SimpleCube::SimpleCube(const char* vertexPath, const char* fragmentPath, 
+					   const char* geometryPath)
 	:TextureRender(vertexPath, fragmentPath, geometryPath) {
 }
 void SimpleCube::onInitial() {
@@ -73,29 +74,24 @@ void SimpleCube::onInitial() {
 	postInitial();
 }
 void SimpleCube::postInitial() {
-	_texture_id = create2DTexture("Resources/img.png");
 	shaderHelper->use();
-	shaderHelper->setInt("uSampler", 0);
+	shaderHelper->setVec3("uBaseColor", _baseColor);
 }
-
 void SimpleCube::onDraw3D() {
 	preDraw3D_CUBE();
 	onDraw3D_CUBE();
 	postDraw3D_CUBE();
 }
 void SimpleCube::preDraw3D_CUBE() {
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	shaderHelper->use();
 }
 void SimpleCube::onDraw3D_CUBE() {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _texture_id);
-
 	if (bViewChanged) {
-		_viewMat = glm::lookAt(_eyePos, _eyePos + _camera_front, UP);// *_cameraRot;
+		_viewMat = glm::lookAt(_eyePos, _eyePos + _camera_front, UP);
 		bViewChanged = false;
 	}
+	shaderHelper->setMat4("uModelMat", _modelMat);
 	shaderHelper->setMat4("uProjMat", _projMat);
 	shaderHelper->setMat4("uViewMat", _viewMat);
 }

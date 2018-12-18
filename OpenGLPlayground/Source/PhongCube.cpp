@@ -13,19 +13,18 @@ void PhongCube::postInitial() {
 
 	_objColor = glm::fvec3(0.43, 0.545, 0.24);//1.0f, 0.5f, 0.31f
 	_lightPos = glm::fvec3(1.2, 1.0, 2.0);
-	_modelMat = glm::mat4(1.0f);
-
+	
 	shaderHelper->use();
 	shaderHelper->setVec3("uLight.ambient_color", ambientColor);
 	shaderHelper->setVec3("uLight.diffuse_color", diffuseColor);
 	shaderHelper->setVec3("uLight.specular_color", _lightColor);
-	shaderHelper->setVec3("uLight.position", _lightPos);
-
-	_texture_id = create2DTexture("Resources/cube_diffuse.png");
+	
+	_diffuse_tex_id = create2DTexture("Resources/cube_diffuse.png");
 	shaderHelper->setInt("uMaterial.diffuse_sampler", 0);
 
 	_specular_tex_id = create2DTexture("Resources/cube_specular.png");
 	shaderHelper->setInt("uMaterial.specular_sampler", 1);
+
 	shaderHelper->setFloat("uMaterial.shininess", 64.0f);
 
 	/*shaderHelper->use();
@@ -37,8 +36,11 @@ void PhongCube::postInitial() {
 void PhongCube::onDraw3D_CUBE() {
 	SimpleCube::onDraw3D_CUBE();
 
-	shaderHelper->setMat4("uModelMat", _modelMat);
 	shaderHelper->setVec3("uEyePos", _eyePos);
+	shaderHelper->setVec3("uLight.position", _lightPos);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _diffuse_tex_id);
 
 	// bind specular map
 	glActiveTexture(GL_TEXTURE1);
