@@ -13,11 +13,7 @@ public:
 	void onDraw3D();
 	void onDestroy();
 	
-	void setProjectionMatrix(glm::mat4 proj) { _projMat = proj;}
 	void setModelMatrix(glm::mat4 model) { _modelMat = model; }
-
-	void MoveCamera(glm::fvec3 move);
-	void RotateCamera(glm::fvec3 front_dir);
 
 protected:
 	float * _vertices;
@@ -33,11 +29,7 @@ protected:
 	int _vertice_num;
 	int _indices_num;
 
-	bool bViewChanged = true;
-	const glm::vec3 UP = glm::vec3(.0f, 1.0f, .0f);
-	glm::fvec3 _camera_front = glm::fvec3(.0, .0, -1.0f);
-	glm::vec3 _eyePos = glm::vec3(.0f, 50.0, 100.0f);
-	glm::mat4 _modelMat, _viewMat, _projMat;
+	glm::mat4 _modelMat;
 	glm::vec3 view_rotate = glm::vec3(.0f);
 	glm::mat4 _cameraRot = glm::mat4(1.0f);
 

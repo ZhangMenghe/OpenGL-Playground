@@ -8,7 +8,6 @@ SimpleCube::SimpleCube(const char* vertexPath, const char* fragmentPath,
 	:TextureRender(vertexPath, fragmentPath, geometryPath) {
 }
 void SimpleCube::onInitial() {
-	_eyePos = glm::vec3(0.0f, 0.0f, 3.0f);
 	_vertice_num = 8;
 
 	glEnable(GL_DEPTH_TEST);
@@ -88,10 +87,6 @@ void SimpleCube::preDraw3D_CUBE() {
 	shaderHelper->use();
 }
 void SimpleCube::onDraw3D_CUBE() {
-	if (bViewChanged) {
-		_viewMat = glm::lookAt(_eyePos, _eyePos + _camera_front, UP);
-		bViewChanged = false;
-	}
 	shaderHelper->setMat4("uModelMat", _modelMat);
 	shaderHelper->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
 	shaderHelper->setMat4("uViewMat", Camera::instance()->GetViewMatrix());

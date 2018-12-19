@@ -2,6 +2,7 @@
 #include <GL/freeglut.h>
 #include <string.h>
 #include <TextureRender.h>
+#include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -13,7 +14,7 @@ TextureRender::TextureRender(const char* vertexPath, const char* fragmentPath, c
 		printf("GL version 3 supported \n");
 	}
 	shaderHelper = new GLShaderHelper(vertexPath, fragmentPath, geometryPath);
-	_modelMat = _viewMat = _projMat = glm::mat4(1.0f);
+	_modelMat = glm::mat4(1.0f);
 }
 void TextureRender::onInitial(){}
 void TextureRender::onInitial(float* vertices, int verticeNum,
@@ -131,14 +132,10 @@ void TextureRender::onDraw3D() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shaderHelper->use();
-	if (bViewChanged) {
-		_viewMat = glm::lookAt(_eyePos, _eyePos+ _camera_front, UP);// *_cameraRot;
-		bViewChanged = false;
-	}
 
-	shaderHelper->setMat4("uProjMat", _projMat);
-	shaderHelper->setMat4("uViewMat", _viewMat);
-	shaderHelper->setVec3("uEye", _eyePos);
+	shaderHelper->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
+	shaderHelper->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
+	shaderHelper->setVec3("uEye", Camera::instance()->GetCameraPosition());
 	
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, _indices_num, GL_UNSIGNED_INT, 0);
@@ -147,13 +144,4 @@ void TextureRender::onDestroy() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(2, VBO);
 	glDeleteBuffers(1, &EBO);
-}
-
-void TextureRender::RotateCamera(glm::fvec3 front_dir) {
-	_camera_front = front_dir;
-	bViewChanged = true;
-}
-void TextureRender::MoveCamera(glm::fvec3 move) {
-	_eyePos += move; 
-	bViewChanged = true; 
 }

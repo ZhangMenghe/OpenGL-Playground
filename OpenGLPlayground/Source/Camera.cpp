@@ -5,23 +5,28 @@ Camera * Camera::instance() {
 		ptr = new Camera();
 return ptr;}
 
-Camera::Camera(): Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+Camera::Camera()
 	{
 		Position = glm::vec3(0.0f, 0.0f, 3.0f);
 		WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		Front = glm::vec3(0.0f, 0.0f, -1.0f);
 		Yaw = YAW;
 		Pitch = PITCH;
-
+		MovementSpeed = SPEED;
+		MouseSensitivity = SENSITIVITY;
+		Fov = FOV;
 		updateCameraVectors();
 	}
 	// Constructor with scalar values
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)
-		: Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-	{
+Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch){
 		Position = glm::vec3(posX, posY, posZ);
 		WorldUp = glm::vec3(upX, upY, upZ);
+		Front = glm::vec3(0.0f, 0.0f, -1.0f);
 		Yaw = yaw;
 		Pitch = pitch;
+		MovementSpeed = SPEED;
+		MouseSensitivity = SENSITIVITY;
+		Fov = FOV;
 		updateCameraVectors();
 	}
 	glm::vec3 Camera::GetCameraPosition() { return Position; }
@@ -31,12 +36,13 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	}
 
 	void Camera::setProjectionMatrix(int screen_width, int screen_height) {
-		ProjMat = glm::perspective(FOV, ((float)screen_width) / screen_height,
-			NEAR_PLANE, FAR_PLANE);
+		screen_ratio = ((float)screen_width) / screen_height;
+		ProjMat = glm::perspective(FOV, screen_ratio, NEAR_PLANE, FAR_PLANE);
 	}
 	glm::mat4 Camera::getProjectionMatrix() { return ProjMat; }
+
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-	void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
+	void Camera::Move_Camera(Camera_Movement direction, float deltaTime)
 	{
 		float velocity = MovementSpeed * deltaTime;
 		if (direction == FORWARD)
@@ -50,7 +56,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	}
 
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-	void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
+	void Camera::Rotate_Camera(float xoffset, float yoffset, bool constrainPitch)
 	{
 		xoffset *= MouseSensitivity;
 		yoffset *= MouseSensitivity;
@@ -72,14 +78,18 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	}
 
 	// Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-	void Camera::ProcessMouseScroll(float yoffset)
+	void Camera::Zoom_Camera(int dir)
 	{
-		if (Zoom >= 1.0f && Zoom <= 45.0f)
-			Zoom -= yoffset;
-		if (Zoom <= 1.0f)
-			Zoom = 1.0f;
-		if (Zoom >= 45.0f)
-			Zoom = 45.0f;
+		if (dir > 0) {
+			//zoom in
+			Fov = (Fov > 1.0F) ? Fov -= ZOOM_SENSITIVE : Fov;
+			ProjMat = glm::perspective(Fov, screen_ratio, NEAR_PLANE, FAR_PLANE);
+		}
+		else {
+			//zoom out
+			Fov = (Fov < 45.0f) ? Fov += ZOOM_SENSITIVE : Fov;
+			ProjMat = glm::perspective(Fov, screen_ratio, NEAR_PLANE, FAR_PLANE);
+		}
 	}
 
 

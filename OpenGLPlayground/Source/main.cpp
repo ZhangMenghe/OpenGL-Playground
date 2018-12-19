@@ -4,11 +4,11 @@
 #include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-/*extern void SpecialKey(int key, int x, int y);
+extern void SpecialKey(int key, int x, int y);
 extern void KeyBoard(unsigned char key, int x, int y);
 extern void MouseControl(int button, int state, int x, int y);
 extern void MouseMotion(int x, int y);
-extern void MouseWheel(int, int, int, int);*/
+extern void MouseWheel(int, int, int, int);
 
 PhongCube * renderer;
 //SimpleCube* lamp;
@@ -63,11 +63,11 @@ int main(int argc, char** argv) {
 
 	glutDisplayFunc(onDrawFrame);
 	glutIdleFunc(onDrawFrame);
-	/*glutSpecialFunc(SpecialKey);
+	glutSpecialFunc(SpecialKey);
 	glutKeyboardFunc(KeyBoard);
 	glutMouseFunc(MouseControl);
 	glutMotionFunc(MouseMotion);
-	glutMouseWheelFunc(MouseWheel);*/
+	glutMouseWheelFunc(MouseWheel);
 
 	onInitial();
 

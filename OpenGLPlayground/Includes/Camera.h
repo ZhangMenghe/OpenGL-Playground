@@ -32,8 +32,8 @@ public:
 	// Camera options
 	float MovementSpeed;
 	float MouseSensitivity;
-	float Zoom;
-
+	float Fov;
+	float screen_ratio = -1.0f;
 	glm::mat4 ProjMat = glm::mat4(1.0f);
 	//glm::mat4 ViewMat = glm::mat4(1.0f);
 	
@@ -49,19 +49,19 @@ public:
 	void setProjectionMatrix(int screen_width, int screen_height);
 	glm::mat4 getProjectionMatrix();
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-	void ProcessKeyboard(Camera_Movement direction, float deltaTime);
+	void Move_Camera(Camera_Movement direction, float deltaTime);
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-	void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
+	void Rotate_Camera(float xoffset, float yoffset, bool constrainPitch = true);
 
 	// Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-	void ProcessMouseScroll(float yoffset);
+	void Zoom_Camera(int dir);
 private:
 	// Default camera values
 	const  float YAW = -90.0f;
 	const float PITCH = 0.0f;
 	const float SPEED = .05f;
 	const float SENSITIVITY = 0.1f;
-	const float ZOOM = 45.0f;
+	const float ZOOM_SENSITIVE = 0.1f;
 
 	const float NEAR_PLANE = 0.01f;
 	const float FAR_PLANE = 1000.0f;
