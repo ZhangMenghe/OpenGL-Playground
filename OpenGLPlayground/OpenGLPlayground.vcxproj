@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\GLShaderHelper.cpp" />
     <ClCompile Include="Source\InteractionHelper.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -88,7 +89,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\OpenGL-Develop-Env\SOIL\src;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\SOIL\src;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;$(IncludePath)</IncludePath>
