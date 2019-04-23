@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\GLShaderHelper.cpp" />
     <ClCompile Include="Source\InteractionHelper.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -29,6 +30,7 @@
     <ClCompile Include="Source\WaterRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Includes\Camera.h" />
     <ClInclude Include="Includes\GLShaderHelper.h" />
     <ClInclude Include="Includes\PhongCube.h" />
     <ClInclude Include="Includes\SimpleCube.h" />
@@ -88,10 +90,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\OpenGL-Develop-Env\SOIL\src;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\OpenGL-Libs\freeglut-3.0.0\include;D:\OpenGL-Libs\glew-2.1.0\include;D:\OpenGL-Libs\glm;C:\Projects\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Libs\stb-master;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;$(IncludePath)</IncludePath>
+    <IncludePath>D:\OpenGL-Libs\stb-master;D:\OpenGL-Libs\glm;D:\OpenGL-Libs\glew-2.1.0\include;D:\OpenGL-Libs\freeglut-3.0.0\include;C:\Projects\Github\OpenGL-Playground\OpenGLPlayground\Includes;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -99,9 +101,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\Win32;D:\OpenGL-Develop-Env\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OpenGL-Libs\glew-2.1.0\lib\Release\Win32;D:\OpenGL-Libs\freeglut-3.0.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32.lib;glew32s.lib;freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -114,7 +117,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>D:\OpenGL-Develop-Env\SOIL\lib;D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\x64;D:\OpenGL-Develop-Env\freeglut\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OpenGL-Libs\glew-2.1.0\lib\Release\x64;D:\OpenGL-Libs\freeglut-3.0.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freeglut.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

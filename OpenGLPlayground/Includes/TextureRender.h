@@ -1,6 +1,6 @@
 #ifndef TEXTURE_RENDER_H
 #define TEXTURE_RENDER_H
-#include <GLShaderHelper.h>
+#include "GLShaderHelper.h"
 #include <vector>
 class TextureRender{
 public:
