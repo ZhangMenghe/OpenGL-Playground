@@ -27,6 +27,7 @@
     <ClCompile Include="Source\SimpleCube.cpp" />
     <ClCompile Include="Source\SimpleQuad.cpp" />
     <ClCompile Include="Source\TextureRender.cpp" />
+    <ClCompile Include="Source\volumeCube.cpp" />
     <ClCompile Include="Source\WaterRender.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +37,7 @@
     <ClInclude Include="Includes\SimpleCube.h" />
     <ClInclude Include="Includes\SimpleQuad.h" />
     <ClInclude Include="Includes\TextureRender.h" />
+    <ClInclude Include="Includes\volumeCube.h" />
     <ClInclude Include="Includes\WaterRender.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
