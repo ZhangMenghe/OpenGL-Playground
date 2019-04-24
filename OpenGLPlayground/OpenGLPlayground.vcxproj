@@ -24,6 +24,7 @@
     <ClCompile Include="Source\InteractionHelper.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\PhongCube.cpp" />
+    <ClCompile Include="Source\RaycastCube.cpp" />
     <ClCompile Include="Source\SimpleCube.cpp" />
     <ClCompile Include="Source\SimpleQuad.cpp" />
     <ClCompile Include="Source\TextureRender.cpp" />
@@ -34,9 +35,11 @@
     <ClInclude Include="Includes\Camera.h" />
     <ClInclude Include="Includes\GLShaderHelper.h" />
     <ClInclude Include="Includes\PhongCube.h" />
+    <ClInclude Include="Includes\RaycastCube.h" />
     <ClInclude Include="Includes\SimpleCube.h" />
     <ClInclude Include="Includes\SimpleQuad.h" />
     <ClInclude Include="Includes\TextureRender.h" />
+    <ClInclude Include="Includes\Utils\ioUtils.h" />
     <ClInclude Include="Includes\volumeCube.h" />
     <ClInclude Include="Includes\WaterRender.h" />
   </ItemGroup>
