@@ -12,6 +12,7 @@ public:
 	void onDraw();
 	void onDraw3D();
 	void onDestroy();
+	void onViewChange(int w, int h) { _screen_width = w; _screen_height = h; }
 	
 	void setModelMatrix(glm::mat4 model) { _modelMat = model; }
 
@@ -28,6 +29,8 @@ protected:
 
 	int _vertice_num;
 	int _indices_num;
+
+	int _screen_height, _screen_width;
 
 	glm::mat4 _modelMat;
 	glm::vec3 view_rotate = glm::vec3(.0f);

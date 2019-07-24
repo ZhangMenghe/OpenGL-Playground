@@ -20,18 +20,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\CarPhysical\CarPhysical.cpp" />
     <ClCompile Include="Source\GLShaderHelper.cpp" />
     <ClCompile Include="Source\InteractionHelper.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\PhongCube.cpp" />
+    <ClCompile Include="Source\RayTracer.cpp" />
     <ClCompile Include="Source\SimpleCube.cpp" />
     <ClCompile Include="Source\SimpleQuad.cpp" />
     <ClCompile Include="Source\TextureRender.cpp" />
     <ClCompile Include="Source\WaterRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Includes\CarPhysical\CarPhysical.h" />
     <ClInclude Include="Includes\GLShaderHelper.h" />
     <ClInclude Include="Includes\PhongCube.h" />
+    <ClInclude Include="Includes\RayTracer.h" />
     <ClInclude Include="Includes\SimpleCube.h" />
     <ClInclude Include="Includes\SimpleQuad.h" />
     <ClInclude Include="Includes\TextureRender.h" />
@@ -89,7 +93,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\SOIL\src;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\OpenSceneGraph-3.6.3\include;D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\SOIL\src;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>D:\OpenGL-Develop-Env\stb-master;D:\OpenGL-Develop-Env\glm-0.9.9.3;D:\OpenGL-Develop-Env\glew-2.0.0\include;D:\OpenGL-Develop-Env\freeglut\include;F:\Github\OpenGL-Playground\OpenGLPlayground\Includes;$(IncludePath)</IncludePath>
@@ -115,8 +119,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>D:\OpenGL-Develop-Env\SOIL\lib;D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\x64;D:\OpenGL-Develop-Env\freeglut\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglut.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OpenSceneGraph-3.6.3\lib;D:\OpenGL-Develop-Env\SOIL\lib;D:\OpenGL-Develop-Env\glew-2.0.0\lib\Release\x64;D:\OpenGL-Develop-Env\freeglut\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenThreadsd.lib;osgAnimationd.lib;osgd.lib;osgDBd.lib;osgFXd.lib;osgGAd.lib;osgManipulatord.lib;osgParticled.lib;osgPresentationd.lib;osgQt5d.lib;osgShadowd.lib;osgSimd.lib;osgTerraind.lib;osgTextd.lib;osgUId.lib;osgUtild.lib;osgViewerd.lib;osgVolumed.lib;osgWidgetd.lib;freeglut.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
