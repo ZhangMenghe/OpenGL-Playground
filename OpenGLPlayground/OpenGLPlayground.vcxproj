@@ -24,16 +24,22 @@
     <ClCompile Include="Source\InteractionHelper.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\PhongCube.cpp" />
+    <ClCompile Include="Source\Shadow.cpp" />
     <ClCompile Include="Source\SimpleCube.cpp" />
     <ClCompile Include="Source\SimpleQuad.cpp" />
+    <ClCompile Include="Source\Texture.cpp" />
     <ClCompile Include="Source\TextureRender.cpp" />
     <ClCompile Include="Source\WaterRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Includes\Config.h" />
     <ClInclude Include="Includes\GLShaderHelper.h" />
     <ClInclude Include="Includes\PhongCube.h" />
+    <ClInclude Include="Includes\PrimitiveUtils.h" />
+    <ClInclude Include="Includes\Shadow.h" />
     <ClInclude Include="Includes\SimpleCube.h" />
     <ClInclude Include="Includes\SimpleQuad.h" />
+    <ClInclude Include="Includes\Texture.h" />
     <ClInclude Include="Includes\TextureRender.h" />
     <ClInclude Include="Includes\WaterRender.h" />
   </ItemGroup>

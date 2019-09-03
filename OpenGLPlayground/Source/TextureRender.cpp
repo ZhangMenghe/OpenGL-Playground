@@ -1,18 +1,12 @@
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+#include <PrimitiveUtils.h>
 #include <string.h>
 #include <TextureRender.h>
 #include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 TextureRender::TextureRender(const char* vertexPath, const char* fragmentPath, const char* geometryPath) {
-	GLenum err = glewInit();
-	// Test for OpenGL 3
-	if (GLEW_VERSION_3_0){
-		printf("GL version 3 supported \n");
-	}
 	shaderHelper = new GLShaderHelper(vertexPath, fragmentPath, geometryPath);
 	_modelMat = glm::mat4(1.0f);
 }

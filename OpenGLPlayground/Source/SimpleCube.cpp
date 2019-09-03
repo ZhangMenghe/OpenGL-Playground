@@ -8,10 +8,6 @@ SimpleCube::SimpleCube(const char* vertexPath, const char* fragmentPath,
 	:TextureRender(vertexPath, fragmentPath, geometryPath) {
 }
 void SimpleCube::onInitial() {
-	_vertice_num = 8;
-
-	glEnable(GL_DEPTH_TEST);
-
 	float vertices[] = {
 		-0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,0.0f,0.0f,
 		0.5f,-0.5f,-0.5f,0.0f,0.0f,-1.0f,1.0f,0.0f,
@@ -50,8 +46,12 @@ void SimpleCube::onInitial() {
 		-0.5f,0.5f,0.5f,0.0f,1.0f,0.0f,0.0f,0.0f,
 		-0.5f,0.5f,-0.5f,0.0f,1.0f,0.0f,0.0f
 	};
-
-	_vertices = vertices;
+	onInitial(vertices, 36);
+}
+void SimpleCube::onInitial(float *vertices, int num) {
+	_vertice_num = 8;
+	_triangle_num = num;
+	glEnable(GL_DEPTH_TEST);
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO[0]);
@@ -59,7 +59,7 @@ void SimpleCube::onInitial() {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 8 * num * sizeof(float), vertices, GL_STATIC_DRAW);
 
 	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -74,8 +74,7 @@ void SimpleCube::onInitial() {
 	postInitial();
 }
 void SimpleCube::postInitial() {
-	shaderHelper->use();
-	shaderHelper->setVec3("uBaseColor", _baseColor);
+	setColor(_baseColor);
 }
 void SimpleCube::onDraw3D() {
 	preDraw3D_CUBE();
@@ -93,5 +92,5 @@ void SimpleCube::onDraw3D_CUBE() {
 }
 void SimpleCube::postDraw3D_CUBE() {
 	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, _triangle_num);
 }

@@ -48,6 +48,10 @@ public:
 	
 	void setProjectionMatrix(int screen_width, int screen_height);
 	glm::mat4 getProjectionMatrix();
+	void getScreenShape(int& width, int& height) {
+		width = _sw; height = _sh;
+	}
+	void getCameraProjectionPlane(float& near_plane, float & far_plane) { near_plane = NEAR_PLANE; far_plane = FAR_PLANE; }
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 	void Move_Camera(Camera_Movement direction, float deltaTime);
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -63,9 +67,11 @@ private:
 	const float SENSITIVITY = 0.1f;
 	const float ZOOM_SENSITIVE = 0.1f;
 
-	const float NEAR_PLANE = 0.01f;
-	const float FAR_PLANE = 1000.0f;
+	const float NEAR_PLANE = 0.1f;
+	const float FAR_PLANE = 100.0f;
 	const float FOV = 45.0f;
+
+	int _sw, _sh;
 
 	// Calculates the front vector from the Camera's (updated) Euler Angles
 	void updateCameraVectors();

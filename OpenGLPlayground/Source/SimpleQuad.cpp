@@ -22,7 +22,6 @@ void SimpleQuad::onInitial() {
 		1, 2, 3  // second triangle
 	};
 	TextureRender::onInitial(vertices, 4, indices, 6, uvs);
-	_texture_id = create2DTexture("Resources/img.png");
 	shaderHelper->use();
 	shaderHelper->setInt("uSampler", 0);
 }

@@ -36,11 +36,12 @@ Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float u
 	}
 
 	void Camera::setProjectionMatrix(int screen_width, int screen_height) {
+		_sw = screen_width; _sh = screen_height;
 		screen_ratio = ((float)screen_width) / screen_height;
 		ProjMat = glm::perspective(FOV, screen_ratio, NEAR_PLANE, FAR_PLANE);
 	}
-	glm::mat4 Camera::getProjectionMatrix() { return ProjMat; }
-
+	glm::mat4 Camera::getProjectionMatrix() {return ProjMat;}
+	
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 	void Camera::Move_Camera(Camera_Movement direction, float deltaTime)
 	{
