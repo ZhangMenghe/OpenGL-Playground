@@ -28,6 +28,7 @@ void ShadowRender::init_shader() {
 	_boxTexture = new Texture("Resources/cube_diffuse.png");
 
 	_objShader->use();
+	_objShader->setInt("uSampler_depth", 0);
 	_objShader->setInt("uSampler_tex", 1);
 
 	_depthShader->use();
@@ -55,6 +56,12 @@ void ShadowRender::init_shader() {
 	}
 }
 void ShadowRender::render_debug() {
+	// reset viewport
+	int sw, sh;
+	Camera::instance()->getScreenShape(sw, sh);
+	glViewport(0, 0, sw, sh);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	_debugquadShader->use();
 	_debugquadShader->setInt("depthMap", 0);
 
@@ -76,17 +83,18 @@ void ShadowRender::render_scene(GLShaderHelper* shader) {
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	//cubes
+	shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(.0f, 1.0f, .0f)));
 	shader->setVec3("uBaseColor", glm::vec3(0.8f, 0.8f, .0f));
 	glBindVertexArray(_cubeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, .0f, .0f)));
-	glBindVertexArray(_cubeVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, .0f, .0f)));
+	//glBindVertexArray(_cubeVAO);
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, .0f)));
-	glBindVertexArray(_cubeVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	//shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, .0f)));
+	//glBindVertexArray(_cubeVAO);
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 void ShadowRender::render_to_texture(glm::mat4 projMat, glm::mat4 viewMat) {
 	_depthShader->use();
@@ -98,19 +106,40 @@ void ShadowRender::render_to_texture(glm::mat4 projMat, glm::mat4 viewMat) {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		render_scene(_depthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+}
+void ShadowRender::render_to_screen() {
 	// reset viewport
 	int sw, sh;
 	Camera::instance()->getScreenShape(sw, sh);
 	glViewport(0, 0, sw, sh);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//config obj shader
+	_objShader->use();
+	_objShader->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
+	_objShader->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
+
+	_objShader->setVec3("uViewPos", Camera::instance()->GetCameraPosition());
+	_objShader->setVec3("uLightPos", lightPos);
+	glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	glm::mat4 lightOrthoProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE);
+
+	glm::mat4 lightSpaceMatrix = lightOrthoProjection * glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	_objShader->setMat4("uLightspaceMat", lightSpaceMatrix);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _depthMap);
+	
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, _boxTexture->GLTexture());
+	render_scene(_objShader);
 }
 void ShadowRender::onDraw3D() {
 	// 1. render depth of scene to texture
 	if (RENDER_FROM_LIGHTSPACE) {
 		glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
 		glm::mat4 lightOrthoProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE);
-		render_to_texture(lightProjection,
+		render_to_texture(lightOrthoProjection,
 			glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0)));
 	}
 	else
@@ -118,20 +147,11 @@ void ShadowRender::onDraw3D() {
 
 	
 	//2. DEBUG DRAW
-	render_debug();
+	//render_debug();
+	// 2. render scene as normal using the generated depth/shadow map 
+	render_to_screen();
 
-	/*if (DRAW_DEBUG_QUAD) {
-		onDraw3D_debug();
-		return;
-	}*/
-
-	/*_objShader->use();
-	_objShader->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
-	_objShader->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, _boxTexture->GLTexture());
-
-	render_scene(_objShader);*/
+	
 		
 	
 }

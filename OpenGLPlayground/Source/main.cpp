@@ -31,7 +31,7 @@ void onDrawFrame() {
 
 	renderer->onDraw3D();
 	//lamp->onDraw3D();
-	//glutPostRedisplay();
+	glutPostRedisplay();
 	glutSwapBuffers();
 }
 void updateLight() {

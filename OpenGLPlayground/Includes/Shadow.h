@@ -16,8 +16,8 @@ class ShadowRender {
 				   *_objShader,//shader for scene objects
 				   *_debugquadShader;//render depthbuffer to a debug quad
 	
-	const glm::vec3 lightPos = glm::vec3(-2.0f, 4.0f, -1.0f);
-	bool RENDER_FROM_LIGHTSPACE = false;
+	const glm::vec3 lightPos = glm::vec3(-1.5f, 3.0f, -1.0f);
+	bool RENDER_FROM_LIGHTSPACE = true;
 	const float LIGHT_NEAR_PLANE = 1.0f, LIGHT_FAR_PLANE = 7.5f;
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 	Texture* _boxTexture;
@@ -27,6 +27,7 @@ class ShadowRender {
 
 	void render_debug();
 	void render_to_texture(glm::mat4 projMat, glm::mat4 viewMat);
+	void render_to_screen();
 	void render_scene(GLShaderHelper* shader);
 public:
 	ShadowRender();
