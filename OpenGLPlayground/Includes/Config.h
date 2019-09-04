@@ -4,4 +4,13 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#include <glm/vec3.hpp>
+const int WINDOW_WIDTH  = 600, WINDOW_HEIGHT = 600;
+
+const glm::vec3 DEFAULT_LIGHT_POS = glm::vec3(-1.5f, 3.0f, -1.0f);
+const float LIGHT_NEAR_PLANE = 1.0f, LIGHT_FAR_PLANE = 7.5f;
+const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+const bool RENDER_FROM_LIGHTSPACE = true;
+const bool DRAW_DEBUG_QUAD = false;
+
 #endif

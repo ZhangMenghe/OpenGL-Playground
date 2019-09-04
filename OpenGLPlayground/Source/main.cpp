@@ -41,6 +41,7 @@ void updateLight() {
 	//renderer->setLightPos(lightPos);
 }
 void onInitial() {
+	Camera::instance()->setPosition(glm::vec3(.0f, 0.5f, 7.0f));
 	renderer->onInitial();
 	//lamp->onInitial();
 	//updateLight();
@@ -54,7 +55,8 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE);
 	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(512, 512);
+	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+
 	glutCreateWindow("WINDOW NAME");
 	//renderer = new WaterRender("Shaders/water.vert", "Shaders/water.frag");
 	//renderer = new PhongCube("Shaders/compLight.vert",

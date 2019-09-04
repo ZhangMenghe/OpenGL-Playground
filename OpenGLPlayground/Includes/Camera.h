@@ -42,6 +42,7 @@ public:
 	// Constructor with scalar values
 	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
+	void setPosition(glm::vec3 pos) { Position = pos; }
 	glm::vec3 GetCameraPosition();
 	// Returns the view matrix calculated using Euler Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix();
@@ -68,7 +69,7 @@ private:
 	const float ZOOM_SENSITIVE = 0.1f;
 
 	const float NEAR_PLANE = 0.1f;
-	const float FAR_PLANE = 100.0f;
+	const float FAR_PLANE = 20.0f;
 	const float FOV = 45.0f;
 
 	int _sw, _sh;

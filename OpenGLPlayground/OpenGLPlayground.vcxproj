@@ -32,6 +32,7 @@
     <ClCompile Include="Source\WaterRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Includes\Camera.h" />
     <ClInclude Include="Includes\Config.h" />
     <ClInclude Include="Includes\GLShaderHelper.h" />
     <ClInclude Include="Includes\PhongCube.h" />

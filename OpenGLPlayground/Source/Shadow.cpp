@@ -4,6 +4,11 @@
 ShadowRender::ShadowRender(){
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_ALWAYS);
+	shadow_width = SHADOW_WIDTH; shadow_height = SHADOW_HEIGHT;
+	lightPos = DEFAULT_LIGHT_POS;
+	lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)shadow_width / (GLfloat)shadow_height, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+	lightOrthoProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE);
+
 }
 void ShadowRender::onInitial() {
 	//Plane
@@ -14,7 +19,7 @@ void ShadowRender::onInitial() {
 	InitVertices2D(QUAD_VERTEX_TEXCOORD, 4, _quadVAO);
 
 	//FBO
-	InitFBO(_depthFBO, _depthMap, SHADOW_WIDTH, SHADOW_HEIGHT);
+	InitFBO(_depthFBO, _depthMap, shadow_width, shadow_height);
 
 	//init shaders
 	init_shader();
@@ -30,6 +35,9 @@ void ShadowRender::init_shader() {
 	_objShader->use();
 	_objShader->setInt("uSampler_depth", 0);
 	_objShader->setInt("uSampler_tex", 1);
+	
+	glm::mat4 lightSpaceMatrix = lightOrthoProjection * glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+	_objShader->setMat4("uLightspaceMat", lightSpaceMatrix);
 
 	_depthShader->use();
 	
@@ -44,6 +52,7 @@ void ShadowRender::init_shader() {
 		_depthShader->setFloat("far_plane", far_plane);
 	}
 	_debugquadShader->use();
+
 	if (RENDER_FROM_LIGHTSPACE) {
 		_debugquadShader->setFloat("near_plane", LIGHT_NEAR_PLANE);
 		_debugquadShader->setFloat("far_plane", LIGHT_FAR_PLANE);
@@ -101,7 +110,7 @@ void ShadowRender::render_to_texture(glm::mat4 projMat, glm::mat4 viewMat) {
 	_depthShader->setMat4("uProjMat", projMat);
 	_depthShader->setMat4("uViewMat", viewMat);
 
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glViewport(0, 0, shadow_width, shadow_height);
 	glBindFramebuffer(GL_FRAMEBUFFER, _depthFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		render_scene(_depthShader);
@@ -121,11 +130,6 @@ void ShadowRender::render_to_screen() {
 
 	_objShader->setVec3("uViewPos", Camera::instance()->GetCameraPosition());
 	_objShader->setVec3("uLightPos", lightPos);
-	glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	glm::mat4 lightOrthoProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE);
-
-	glm::mat4 lightSpaceMatrix = lightOrthoProjection * glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-	_objShader->setMat4("uLightspaceMat", lightSpaceMatrix);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _depthMap);
@@ -136,20 +140,16 @@ void ShadowRender::render_to_screen() {
 }
 void ShadowRender::onDraw3D() {
 	// 1. render depth of scene to texture
-	if (RENDER_FROM_LIGHTSPACE) {
-		glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-		glm::mat4 lightOrthoProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE);
+	if (RENDER_FROM_LIGHTSPACE)
 		render_to_texture(lightOrthoProjection,
 			glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0)));
-	}
 	else
 		render_to_texture(Camera::instance()->getProjectionMatrix(), Camera::instance()->GetViewMatrix());
 
-	
-	//2. DEBUG DRAW
-	//render_debug();
 	// 2. render scene as normal using the generated depth/shadow map 
 	render_to_screen();
+	if(DRAW_DEBUG_QUAD)
+		render_debug();
 
 	
 		
