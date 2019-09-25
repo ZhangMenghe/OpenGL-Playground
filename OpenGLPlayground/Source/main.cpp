@@ -41,7 +41,9 @@ void updateLight() {
 	//renderer->setLightPos(lightPos);
 }
 void onInitial() {
+	//Camera(glm::vec3(.0f, 0.5f, 7.0f), LOOKAT_CENTER);
 	Camera::instance()->setPosition(glm::vec3(.0f, 0.5f, 7.0f));
+	//Camera::instance()->setCenter(LOOKAT_CENTER);
 	renderer->onInitial();
 	//lamp->onInitial();
 	//updateLight();

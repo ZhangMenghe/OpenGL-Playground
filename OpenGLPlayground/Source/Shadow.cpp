@@ -29,6 +29,7 @@ void ShadowRender::init_shader() {
 	_depthShader = new GLShaderHelper("Shaders/shadow_depth.vert", "Shaders/shadow_depth.frag");
 	_debugquadShader = new GLShaderHelper("Shaders/shadow_debug_quad.vert", "Shaders/shadow_debug_quad.frag");
 	_objShader = new GLShaderHelper("Shaders/shadow_cube.vert", "Shaders/shadow_cube.frag");
+	_cubeSubShader = new GLShaderHelper("Shaders/cubeSub.vert", "Shaders/cubeSub.frag");
 	
 	_boxTexture = new Texture("Resources/cube_diffuse.png");
 
@@ -38,6 +39,11 @@ void ShadowRender::init_shader() {
 	
 	glm::mat4 lightSpaceMatrix = lightOrthoProjection * glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
 	_objShader->setMat4("uLightspaceMat", lightSpaceMatrix);
+
+	_cubeSubShader->use();
+	_cubeSubShader->setInt("uSampler_depth", 0);
+	_cubeSubShader->setVec3("uPlanePoint", plane_p);
+	_cubeSubShader->setVec3("uPlaneNormal", plane_normal);
 
 	_depthShader->use();
 	
@@ -87,12 +93,12 @@ void ShadowRender::render_scene(GLShaderHelper* shader) {
 
 	//floor
 	shader->setMat4("uModelMat", glm::mat4(1.0f));
-	_objShader->setVec3("uBaseColor", glm::vec3(0.6f));
+	shader->setVec3("uBaseColor", glm::vec3(0.6f));
 	glBindVertexArray(_planeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-
+	
 	//cubes
-	shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(.0f, 1.0f, .0f)));
+	shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), LOOKAT_CENTER));
 	shader->setVec3("uBaseColor", glm::vec3(0.8f, 0.8f, .0f));
 	glBindVertexArray(_cubeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -116,7 +122,7 @@ void ShadowRender::render_to_texture(glm::mat4 projMat, glm::mat4 viewMat) {
 		render_scene(_depthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-void ShadowRender::render_to_screen() {
+void ShadowRender::render_to_screen(GLShaderHelper* shader) {
 	// reset viewport
 	int sw, sh;
 	Camera::instance()->getScreenShape(sw, sh);
@@ -124,30 +130,39 @@ void ShadowRender::render_to_screen() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//config obj shader
-	_objShader->use();
-	_objShader->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
-	_objShader->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
-
-	_objShader->setVec3("uViewPos", Camera::instance()->GetCameraPosition());
-	_objShader->setVec3("uLightPos", lightPos);
-
+	shader->use();
+	shader->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
+	shader->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
+	shader->setVec3("uViewPos", Camera::instance()->GetCameraPosition());
+	
+	if (RENDER_FROM_LIGHTSPACE) {
+		shader->setVec3("uLightPos", lightPos);
+	}
+	else {
+		shader->setMat4("uProjMat_inv", glm::inverse(Camera::instance()->getProjectionMatrix()));
+	}
+	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _depthMap);
 	
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, _boxTexture->GLTexture());
-	render_scene(_objShader);
+	render_scene(shader);
 }
 void ShadowRender::onDraw3D() {
 	// 1. render depth of scene to texture
-	if (RENDER_FROM_LIGHTSPACE)
+	if (RENDER_FROM_LIGHTSPACE) {
 		render_to_texture(lightOrthoProjection,
 			glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0)));
-	else
+		render_to_screen(_objShader);
+	}
+	else {
 		render_to_texture(Camera::instance()->getProjectionMatrix(), Camera::instance()->GetViewMatrix());
+		render_to_screen(_cubeSubShader);
+	}
 
 	// 2. render scene as normal using the generated depth/shadow map 
-	render_to_screen();
+	
 	if(DRAW_DEBUG_QUAD)
 		render_debug();
 

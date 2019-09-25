@@ -17,14 +17,16 @@ class ShadowRender {
 	glm::mat4 lightProjection, lightOrthoProjection;
 	GLShaderHelper *_depthShader,
 				   *_objShader,//shader for scene objects
+				   *_cubeSubShader,//shader for scene object with 	
 				   *_debugquadShader;//render depthbuffer to a debug quad
 	Texture* _boxTexture;
+	glm::vec3 plane_p = LOOKAT_CENTER, plane_normal = glm::vec3(1.0f, .0f, .0f);
 
 
 	void init_shader();
 	void render_debug();
 	void render_to_texture(glm::mat4 projMat, glm::mat4 viewMat);
-	void render_to_screen();
+	void render_to_screen(GLShaderHelper* shader);
 	void render_scene(GLShaderHelper* shader);
 public:
 	ShadowRender();
