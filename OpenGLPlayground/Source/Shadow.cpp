@@ -4,7 +4,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 
 ShadowRender::ShadowRender(){
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_ALWAYS);
 	shadow_width = SHADOW_WIDTH; shadow_height = SHADOW_HEIGHT;
 	lightPos = DEFAULT_LIGHT_POS;
@@ -162,22 +162,30 @@ void ShadowRender::render_to_screen(GLShaderHelper* shader) {
 	render_object(shader);
 	render_scene(shader);
 }
-void ShadowRender::onDraw3D() {
-	// 1. render depth of scene to texture
-	if (RENDER_FROM_LIGHTSPACE) {
-		render_to_texture(lightOrthoProjection,
-			glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0)));
-		render_to_screen(_objShader);
-	}
-	else {
-		render_to_texture(Camera::instance()->getProjectionMatrix(), Camera::instance()->GetViewMatrix());
-		render_to_screen(_cubeSubShader);
-	}
+void ShadowRender::onDrawLightSpace(){
+	glEnable(GL_DEPTH_TEST);
 
-	// 2. render scene as normal using the generated depth/shadow map 
-	
-	if(DRAW_DEBUG_QUAD)
-		render_debug();
+	render_to_texture(lightOrthoProjection,
+		glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0)));
+	render_to_screen(_objShader);
+
+	glDisable(GL_DEPTH_TEST);
+}
+void ShadowRender::onDrawCameraSpace(){
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+
+	render_to_texture(Camera::instance()->getProjectionMatrix(), Camera::instance()->GetViewMatrix());
+	render_to_screen(_cubeSubShader);
+
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+}
+
+void ShadowRender::onDraw3D() {
+	if (RENDER_FROM_LIGHTSPACE) onDrawLightSpace();
+	else onDrawCameraSpace();
+	if (DRAW_DEBUG_QUAD) render_debug();
 }
 void ShadowRender::render_cutting_plane(GLShaderHelper* shader) {
 	shader->setMat4("uModelMat",

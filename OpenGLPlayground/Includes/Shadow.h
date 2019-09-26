@@ -32,6 +32,9 @@ class ShadowRender {
 
 	void render_to_texture(glm::mat4 projMat, glm::mat4 viewMat);
 	void render_to_screen(GLShaderHelper* shader);
+
+	void onDrawLightSpace();
+	void onDrawCameraSpace();
 	void render_scene(GLShaderHelper* shader);
 	void render_object(GLShaderHelper* shader);
 public:
