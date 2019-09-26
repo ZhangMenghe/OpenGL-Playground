@@ -15,6 +15,7 @@ uniform sampler2D uSampler_depth;
 uniform vec3 uViewPos, uPlanePoint, uPlaneNormal;
 uniform mat4 uProjMat_inv;//inverse camera projection matrix, modelview matrix
 uniform vec3 uBaseColor;
+uniform bool uIsCut;
 float RayPlane(vec3 ray_origin, vec3 ray_dir, vec3 plane_p, vec3 plane_n) {
 	float d = dot(plane_n, ray_dir);
 	float t = dot(plane_p - ray_origin, plane_n);
@@ -34,6 +35,10 @@ float DepthTextureToObjectDepth(vec3 ray_origin, vec3 screenPos) {
 }
 
 void main(){
+	if(!uIsCut){
+		FragColor = vec4(uBaseColor, 1.0);
+		return;
+	}
 	// shot ray from camera to each vertex
 	vec3 ray_origin = fs_in.camposObjSpace;
 	vec3 ray_dir = normalize(fs_in.raydir);
