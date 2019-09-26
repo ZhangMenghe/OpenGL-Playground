@@ -20,7 +20,6 @@ Camera::Camera(){
 Camera::Camera(glm::vec3 pos, glm::vec3 center){
 		Position = pos;
 		Center = center;
-		FPS_MODE = false;
 		Front = WORLD_FRONT;
 		Yaw = YAW;
 		Pitch = PITCH;

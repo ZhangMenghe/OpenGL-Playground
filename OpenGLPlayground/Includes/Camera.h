@@ -20,7 +20,7 @@ class Camera{
 public:
 	static Camera* ptr;
 	static Camera* instance();
-	bool FPS_MODE = true;
+	const bool FPS_MODE = true;
 	// Camera Attributes
 	glm::vec3 Position;
 	glm::vec3 Front;
@@ -45,7 +45,7 @@ public:
 	Camera(glm::vec3 pos, glm::vec3 center);
 
 	void setPosition(glm::vec3 pos) { Position = pos; }
-	void setCenter(glm::vec3 center) { Center = center; FPS_MODE = false;}
+	void setCenter(glm::vec3 center) { Center = center;}
 	glm::vec3 GetCameraPosition();
 	// Returns the view matrix calculated using Euler Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix();
@@ -71,7 +71,7 @@ private:
 	const float SENSITIVITY = 0.005f;
 	const float ZOOM_SENSITIVE = 0.1f;
 
-	const float NEAR_PLANE = 0.1f;
+	const float NEAR_PLANE = 1.0f;
 	const float FAR_PLANE = 20.0f;
 	const float FOV = 45.0f;
 	const glm::vec3 WORLD_FRONT = glm::vec3(0, 0, -1);

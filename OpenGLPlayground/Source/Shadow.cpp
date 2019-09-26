@@ -1,13 +1,19 @@
 #include <Shadow.h>
 #include <GL/glew.h>
 #include <Camera.h>
+#include <glm/gtx/rotate_vector.hpp>
 ShadowRender::ShadowRender(){
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_MULTISAMPLE);
 	//glDepthFunc(GL_ALWAYS);
 	shadow_width = SHADOW_WIDTH; shadow_height = SHADOW_HEIGHT;
 	lightPos = DEFAULT_LIGHT_POS;
 	lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)shadow_width / (GLfloat)shadow_height, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
 	lightOrthoProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, LIGHT_NEAR_PLANE, LIGHT_FAR_PLANE);
+	oriViewPos = Camera::instance()->GetCameraPosition();
+	cube_model_mats.push_back(glm::translate(glm::mat4(1.0f), LOOKAT_CENTER) * glm::scale(glm::mat4(1.0), glm::vec3(2,2,2)));
+	model_mat_inv.push_back(glm::inverse(cube_model_mats[0]));
 
 }
 void ShadowRender::onInitial() {
@@ -17,7 +23,7 @@ void ShadowRender::onInitial() {
 	InitVertices(CUBE_VERTEX_NORMAL_TEXCOORD, 36, _cubeVAO);
 	//Debug Quad
 	InitVertices2D(QUAD_VERTEX_TEXCOORD, 4, _quadVAO);
-
+	
 	//FBO
 	InitFBO(_depthFBO, _depthMap, shadow_width, shadow_height);
 
@@ -42,7 +48,8 @@ void ShadowRender::init_shader() {
 
 	_cubeSubShader->use();
 	_cubeSubShader->setInt("uSampler_depth", 0);
-	_cubeSubShader->setVec3("uPlanePoint", plane_p);
+	//_cubeSubShader->setVec3("uPlanePoint", glm::vec3(model_mat_inv[0] * glm::vec4(plane_p, 1.0)));//plane_p);
+	_cubeSubShader->setVec3("uPlanePoint", glm::vec3(0,0,0));
 	_cubeSubShader->setVec3("uPlaneNormal", plane_normal);
 
 	_depthShader->use();
@@ -89,19 +96,32 @@ void ShadowRender::render_debug() {
 	glBindVertexArray(0);
 }
 void ShadowRender::render_scene(GLShaderHelper* shader) {
+	glDisable(GL_DEPTH);
 	shader->use();
 
 	//floor
 	shader->setMat4("uModelMat", glm::mat4(1.0f));
 	shader->setVec3("uBaseColor", glm::vec3(0.6f));
+	shader->setBool("uIsCut", false);
 	glBindVertexArray(_planeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	
 	//cubes
-	shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), LOOKAT_CENTER));
+	shader->setMat4("uModelMat", cube_model_mats[0]);
 	shader->setVec3("uBaseColor", glm::vec3(0.8f, 0.8f, .0f));
+	shader->setBool("uIsCut", true);
 	glBindVertexArray(_cubeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	//cutting plane
+	shader->setMat4("uModelMat",
+		glm::translate(glm::mat4(1.0), plane_p)*// glm::vec3(cube_model_mats[0]* glm::vec4(plane_p, 1.0)))*
+		glm::orientation(plane_normal, glm::vec3(0, 0, 1)) * 
+		glm::scale(glm::mat4(1.0), glm::vec3(2,2,2)));
+	
+	//shader->setVec3("uBaseColor", glm::vec3(0.2f,.0f,.0f));
+	//shader->setBool("uIsCut", false);
+	//draw_cutting_plane();
 
 	//shader->setMat4("uModelMat", glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, .0f, .0f)));
 	//glBindVertexArray(_cubeVAO);
@@ -112,6 +132,10 @@ void ShadowRender::render_scene(GLShaderHelper* shader) {
 	//glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 void ShadowRender::render_to_texture(glm::mat4 projMat, glm::mat4 viewMat) {
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	_depthShader->use();
 	_depthShader->setMat4("uProjMat", projMat);
 	_depthShader->setMat4("uViewMat", viewMat);
@@ -121,24 +145,32 @@ void ShadowRender::render_to_texture(glm::mat4 projMat, glm::mat4 viewMat) {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		render_scene(_depthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
 }
 void ShadowRender::render_to_screen(GLShaderHelper* shader) {
 	// reset viewport
 	int sw, sh;
 	Camera::instance()->getScreenShape(sw, sh);
 	glViewport(0, 0, sw, sh);
+	
+	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//config obj shader
 	shader->use();
 	shader->setMat4("uProjMat", Camera::instance()->getProjectionMatrix());
 	shader->setMat4("uViewMat", Camera::instance()->GetViewMatrix());
-	shader->setVec3("uViewPos", Camera::instance()->GetCameraPosition());
+	shader->setVec3("uCamposObjSpace", glm::vec3(model_mat_inv[0] * glm::vec4(Camera::instance()->GetCameraPosition(), 1.0)));
 	
 	if (RENDER_FROM_LIGHTSPACE) {
 		shader->setVec3("uLightPos", lightPos);
 	}
 	else {
+		shader->setMat4("uMVMat_inv", glm::inverse(Camera::instance()->GetViewMatrix() * cube_model_mats[0]));
 		shader->setMat4("uProjMat_inv", glm::inverse(Camera::instance()->getProjectionMatrix()));
 	}
 	
@@ -148,6 +180,11 @@ void ShadowRender::render_to_screen(GLShaderHelper* shader) {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, _boxTexture->GLTexture());
 	render_scene(shader);
+
+	glDisable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 void ShadowRender::onDraw3D() {
 	// 1. render depth of scene to texture
@@ -172,4 +209,33 @@ void ShadowRender::onDraw3D() {
 }
 void ShadowRender::onDestroy() {
 
+}
+void ShadowRender::draw_cutting_plane() {
+	if (!_cplaneVAO) {
+		//std::vector<glm::vec3> STANDARD_QUAD{glm::vec3(-1,-1,0),glm::vec3(-1,1,0), glm::vec3(1,1,0), glm::vec3(1,-1,0) };
+		float vertices[] = {
+			1.0f,1.0f,.0f,
+			-1.0f,1.0f,.0f,
+			-1.0f,-1.0f,.0f,
+
+			-1.0f,-1.0f,.0f,
+			1.0f,-1.0f,.0f,
+			1.0f,1.0f,.0f,
+		};
+		unsigned int VBO = 0;
+		glGenVertexArrays(1, &_cplaneVAO);
+		glGenBuffers(1, &VBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, 18*sizeof(float), vertices, GL_STATIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(_cplaneVAO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	glBindVertexArray(_cplaneVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
 }

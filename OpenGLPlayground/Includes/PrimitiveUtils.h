@@ -1,51 +1,51 @@
 #ifndef PRIMITIVE_UTILS_H
 #define PRIMITIVE_UTILS_H
 
-#include <Config.h>
+#include <Config.h>`
 //8*36
 const float CUBE_VERTEX_NORMAL_TEXCOORD[288] = {
 	// back face
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-		 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
-		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-		-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -0.5f, 0.0f, 0.0f, // bottom-left
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -0.5f, 0.5f, 0.5f, // top-right
+		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -0.5f, 0.5f, 0.0f, // bottom-right         
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -0.5f, 0.5f, 0.5f, // top-right
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -0.5f, 0.0f, 0.0f, // bottom-left
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -0.5f, 0.0f, 0.5f, // top-left
 		// front face
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-		 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
-		 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-		 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-		-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  0.5f, 0.0f, 0.0f, // bottom-left
+		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  0.5f, 0.5f, 0.0f, // bottom-right
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  0.5f, 0.5f, 0.5f, // top-right
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  0.5f, 0.5f, 0.5f, // top-right
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  0.5f, 0.0f, 0.5f, // top-left
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  0.5f, 0.0f, 0.0f, // bottom-left
 		// left face
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-		-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-		-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+		-0.5f,  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 0.5f, 0.0f, // top-right
+		-0.5f,  0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 0.5f, 0.5f, // top-left
+		-0.5f, -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 0.0f, 0.5f, // bottom-left
+		-0.5f, -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, 0.0f, 0.5f, // bottom-left
+		-0.5f, -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+		-0.5f,  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, 0.5f, 0.0f, // top-right
 		// right face
-		 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-		 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-		 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
-		 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-		 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-		 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+		 0.5f,  0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 0.5f, 0.0f, // top-left
+		 0.5f, -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 0.5f, // bottom-right
+		 0.5f,  0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 0.5f, 0.5f, // top-right         
+		 0.5f, -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 0.5f, // bottom-right
+		 0.5f,  0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 0.5f, 0.0f, // top-left
+		 0.5f, -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
 		// bottom face
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-		 1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
-		 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-		 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-		-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+		-0.5f, -0.5f, -0.5f,  0.0f, -0.5f,  0.0f, 0.0f, 0.5f, // top-right
+		 0.5f, -0.5f, -0.5f,  0.0f, -0.5f,  0.0f, 0.5f, 0.5f, // top-left
+		 0.5f, -0.5f,  0.5f,  0.0f, -0.5f,  0.0f, 0.5f, 0.0f, // bottom-left
+		 0.5f, -0.5f,  0.5f,  0.0f, -0.5f,  0.0f, 0.5f, 0.0f, // bottom-left
+		-0.5f, -0.5f,  0.5f,  0.0f, -0.5f,  0.0f, 0.0f, 0.0f, // bottom-right
+		-0.5f, -0.5f, -0.5f,  0.0f, -0.5f,  0.0f, 0.0f, 0.5f, // top-right
 		// top face
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-		 1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-		 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
-		 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-		-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left       
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.5f,  0.0f, 0.0f, 0.5f, // top-left
+		 0.5f,  0.5f , 0.5f,  0.0f,  0.5f,  0.0f, 0.5f, 0.0f, // bottom-right
+		 0.5f,  0.5f, -0.5f,  0.0f,  0.5f,  0.0f, 0.5f, 0.5f, // top-right     
+		 0.5f,  0.5f,  0.5f,  0.0f,  0.5f,  0.0f, 0.5f, 0.0f, // bottom-right
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.5f,  0.0f, 0.0f, 0.5f, // top-left
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.5f,  0.0f, 0.0f, 0.0f  // bottom-left       
 };
 //Plane
 const float PLANE_VERTEX_NORMAL_TEXCOORD[48] = {
@@ -108,11 +108,11 @@ inline void InitFBO(GLuint& fbo, GLuint& depthMap, int tex_width, int tex_height
 	glBindTexture(GL_TEXTURE_2D, depthMap);
 
 	//dynamic
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, tex_width, tex_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, tex_width, tex_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
