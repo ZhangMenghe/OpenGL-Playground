@@ -72,7 +72,7 @@ private:
 	const float ZOOM_SENSITIVE = 0.1f;
 
 	const float NEAR_PLANE = 1.0f;
-	const float FAR_PLANE = 20.0f;
+	const float FAR_PLANE = 10000.0f;
 	const float FOV = 45.0f;
 	const glm::vec3 WORLD_FRONT = glm::vec3(0, 0, -1);
 	const glm::vec3 WorldUp = glm::vec3(0,1,0);

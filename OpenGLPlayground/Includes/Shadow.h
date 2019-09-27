@@ -24,7 +24,9 @@ class ShadowRender {
 				   *_debugquadShader;//render depthbuffer to a debug quad
 	Texture* _boxTexture;
 
-	glm::vec3 plane_p = LOOKAT_CENTER, plane_normal = glm::vec3(1.0f, .0f, .0f);
+	glm::vec3 plane_p = LOOKAT_CENTER, plane_normal = glm::vec3(1.0f, 1.0f, .0f);
+	glm::vec3 sphere_c = LOOKAT_CENTER + glm::vec3(-0.5, .0, .0); 
+	float sphere_radius = 1.0f;
 
 	void init_shader();
 	void render_debug();
