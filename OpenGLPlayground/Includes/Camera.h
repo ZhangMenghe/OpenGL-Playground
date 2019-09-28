@@ -20,12 +20,14 @@ class Camera{
 public:
 	static Camera* ptr;
 	static Camera* instance();
+	const bool FPS_MODE = true;
 	// Camera Attributes
 	glm::vec3 Position;
 	glm::vec3 Front;
 	glm::vec3 Up;
+	glm::vec3 Center;
 	glm::vec3 Right;
-	glm::vec3 WorldUp;
+	
 	// Euler Angles
 	float Yaw;
 	float Pitch;
@@ -40,14 +42,20 @@ public:
 	// Constructor with vectors
 	Camera();
 	// Constructor with scalar values
-	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
+	Camera(glm::vec3 pos, glm::vec3 center);
 
+	void setPosition(glm::vec3 pos) { Position = pos; }
+	void setCenter(glm::vec3 center) { Center = center;}
 	glm::vec3 GetCameraPosition();
 	// Returns the view matrix calculated using Euler Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix();
 	
 	void setProjectionMatrix(int screen_width, int screen_height);
 	glm::mat4 getProjectionMatrix();
+	void getScreenShape(int& width, int& height) {
+		width = _sw; height = _sh;
+	}
+	void getCameraProjectionPlane(float& near_plane, float & far_plane) { near_plane = NEAR_PLANE; far_plane = FAR_PLANE; }
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 	void Move_Camera(Camera_Movement direction, float deltaTime);
 	// Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -57,15 +65,21 @@ public:
 	void Zoom_Camera(int dir);
 private:
 	// Default camera values
-	const  float YAW = -90.0f;
+	const float YAW = -90.0f;
 	const float PITCH = 0.0f;
 	const float SPEED = .05f;
-	const float SENSITIVITY = 0.1f;
+	const float SENSITIVITY = 0.005f;
 	const float ZOOM_SENSITIVE = 0.1f;
 
-	const float NEAR_PLANE = 0.01f;
-	const float FAR_PLANE = 1000.0f;
+	const float NEAR_PLANE = 1.0f;
+	const float FAR_PLANE = 10000.0f;
 	const float FOV = 45.0f;
+	const glm::vec3 WORLD_FRONT = glm::vec3(0, 0, -1);
+	const glm::vec3 WorldUp = glm::vec3(0,1,0);
+	glm::vec3 LOOK_CENTER;
+
+	int _sw, _sh;
+	float _sw_inv, _sh_inv;
 
 	// Calculates the front vector from the Camera's (updated) Euler Angles
 	void updateCameraVectors();

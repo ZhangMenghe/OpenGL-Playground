@@ -2,6 +2,7 @@
 #define TEXTURE_RENDER_H
 #include "GLShaderHelper.h"
 #include <vector>
+
 class TextureRender{
 public:
 	TextureRender(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
@@ -14,6 +15,7 @@ public:
 	void onDestroy();
 	
 	void setModelMatrix(glm::mat4 model) { _modelMat = model; }
+	GLShaderHelper* getShaderHelper() { return shaderHelper; }
 
 protected:
 	float * _vertices;
