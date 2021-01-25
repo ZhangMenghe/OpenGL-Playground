@@ -84,4 +84,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bins\x64\freeglut.dll" />
+    <None Include="bins\x64\glew32.dll" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
 #include <Config.h>
-#include <iostream>
 #include <PhongCube.h>
 #include <Camera.h>
 #include <glm/gtc/matrix_transform.hpp>
